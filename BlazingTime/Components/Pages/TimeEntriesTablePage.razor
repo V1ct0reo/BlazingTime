@@ -1,0 +1,42 @@
+﻿@page "/timeentriestable"
+@using BlazingTime.Shared
+@using BlazingTime.Shared.Interfaces
+@inject ITimeEntryFetcher TimeEntryFetcher
+
+<h3>TimeEntriesTablePage</h3>
+
+@if (entries == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in entries)
+            {
+                <tr>
+                    <td>@e.Id</td>
+                    <td>@e.Description</td>
+                    <td>@e.Hours</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TimeEntryDto>? entries;
+    protected override async Task OnInitializedAsync()
+    {
+        entries = (await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now, DateTime.Now + TimeSpan.FromHours(1))).ToList();
+
+    }
+}
