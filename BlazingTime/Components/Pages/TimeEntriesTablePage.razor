@@ -18,6 +18,34 @@
     </ul>
 }
 
+@if (timeEntries != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in timeEntries)
+            {
+                <tr>
+                    <td>@e.Id</td>
+                    <td>@e.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <ul>
+        @foreach (var entry in timeEntries)
+        {
+            <li>@entry.Description (@entry.Start.ToShortDateString())</li>
+        }
+    </ul>
+}
+
 
 @code {
     private IEnumerable<TimeEntryDto> timeEntries;

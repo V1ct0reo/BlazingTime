@@ -25,8 +25,8 @@ namespace BlazingTime
                 builder.Configuration.GetSection("Toggl"));
 
 
-            builder.Services.AddHttpClient<ITimeEntryFetcher, TogglTrackTimeEntryFetcher>();
-
+            //builder.Services.AddHttpClient<ITimeEntryFetcher, TogglTrackTimeEntryFetcher>();
+            builder.Services.AddScoped<ITimeEntryFetcher, MockTimeEntryFetcher>();
 
             var app = builder.Build();
 
