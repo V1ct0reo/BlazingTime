@@ -5,38 +5,39 @@
 
 <h3>TimeEntriesTablePage</h3>
 
-@if (entries == null)
+<button @onclick="LoadData">Load Time Entries</button>
+<button @onclick="LogTest">Log-test</button>
+
+@if (timeEntries != null)
 {
-    <p>Loading ...</p>
+    <ul>
+        @foreach (var entry in timeEntries)
+        {
+            <li>@entry.Description (@entry.Start.ToShortDateString())</li>
+        }
+    </ul>
 }
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Description</th>
-                <th>Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var e in entries)
-            {
-                <tr>
-                    <td>@e.Id</td>
-                    <td>@e.Description</td>
-                    <td>@e.Hours</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
 
 @code {
-    private List<TimeEntryDto>? entries;
+    private IEnumerable<TimeEntryDto> timeEntries;
+
     protected override async Task OnInitializedAsync()
     {
-        entries = (await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now, DateTime.Now + TimeSpan.FromHours(1))).ToList();
-
+        Console.WriteLine("on initialize");
     }
+
+    async Task LoadData()
+    {
+        Console.WriteLine($"Fetching entries");
+        timeEntries = await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now.AddDays(-7), DateTime.Now);
+        Console.WriteLine($"Fetched {timeEntries.Count()} entries");
+    }
+
+    void LogTest()
+    {
+        Console.WriteLine("LOGTEST");
+    }
+
+
 }
