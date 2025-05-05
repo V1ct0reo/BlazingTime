@@ -16,6 +16,9 @@ namespace BlazingTime
                 .AddJsonFile("appsettings.Development.json")
                 .AddEnvironmentVariables();
 
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
+            builder.Logging.AddConsole();
+
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
@@ -27,6 +30,8 @@ namespace BlazingTime
 
             //builder.Services.AddHttpClient<ITimeEntryFetcher, TogglTrackTimeEntryFetcher>();
             builder.Services.AddScoped<ITimeEntryFetcher, MockTimeEntryFetcher>();
+
+
 
             var app = builder.Build();
 

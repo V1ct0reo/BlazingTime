@@ -1,12 +1,19 @@
 ﻿@page "/timeentriestable"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
 @using BlazingTime.Shared
 @using BlazingTime.Shared.Interfaces
 @inject ITimeEntryFetcher TimeEntryFetcher
 
-<h3>TimeEntriesTablePage</h3>
+
+<h1>TimeEntriesTablePage</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 <button @onclick="LoadData">Load Time Entries</button>
-<button @onclick="LogTest">Log-test</button>
+<button class="btn btn-primary" @onclick="LogTest">Log-test</button>
 
 @if (timeEntries != null)
 {
@@ -45,10 +52,17 @@
         }
     </ul>
 }
+else
+{
+    <p>nothing to show yet...</p>
+}
+
+<p>@testString</p>
 
 
 @code {
-    private IEnumerable<TimeEntryDto> timeEntries;
+    private List<TimeEntryDto> timeEntries =new();
+    private string testString = "testString";
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,14 +72,21 @@
     async Task LoadData()
     {
         Console.WriteLine($"Fetching entries");
-        timeEntries = await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now.AddDays(-7), DateTime.Now);
+        timeEntries = (await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now.AddDays(-7), DateTime.Now)).ToList();
         Console.WriteLine($"Fetched {timeEntries.Count()} entries");
     }
 
-    void LogTest()
+    protected void LogTest()
     {
         Console.WriteLine("LOGTEST");
+
+        testString += " test";
     }
 
+    private int currentCount = 0;
 
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
 }
