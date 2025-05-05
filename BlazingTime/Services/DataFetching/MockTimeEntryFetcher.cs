@@ -11,8 +11,8 @@ namespace BlazingTime.Services.DataFetching
         {
             var data = new List<TimeEntryDto>()
             {
-                new() { Id = 1, Description = "Mock Task A", Start = DateTime.Now.AddHours(-2), Stop = DateTime.Now, Hours = 2 },
-                new() { Id = 2, Description = "Mock Task B", Start = DateTime.Now.AddHours(-1), Stop = DateTime.Now, Hours = 1 }
+                new() { Id = 1, Description = "Mock Task A", Start = DateTime.Now.AddHours(-2), Stop = DateTime.Now },
+                new() { Id = 2, Description = "Mock Task B", Start = DateTime.Now.AddHours(-1), Stop = DateTime.Now }
             };
             return Task.FromResult<IEnumerable<TimeEntryDto>>(data);
         }

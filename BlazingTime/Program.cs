@@ -1,6 +1,7 @@
 using BlazingTime.Components;
 using BlazingTime.Services.DataFetching;
 using BlazingTime.Shared.Interfaces;
+using BlazingTime.Shared.Options;
 
 namespace BlazingTime
 {
@@ -10,10 +11,27 @@ namespace BlazingTime
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.Development.json")
+                .AddEnvironmentVariables();
+
+            builder.Logging.SetMinimumLevel(LogLevel.Information);
+            builder.Logging.AddConsole();
+
+
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.Configure<TogglOptions>(
+                builder.Configuration.GetSection("Toggl"));
+
+
+            //builder.Services.AddHttpClient<ITimeEntryFetcher, TogglTrackTimeEntryFetcher>();
             builder.Services.AddScoped<ITimeEntryFetcher, MockTimeEntryFetcher>();
+
+
 
             var app = builder.Build();
 

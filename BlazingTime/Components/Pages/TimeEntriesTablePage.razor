@@ -1,42 +1,92 @@
 ﻿@page "/timeentriestable"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
 @using BlazingTime.Shared
 @using BlazingTime.Shared.Interfaces
 @inject ITimeEntryFetcher TimeEntryFetcher
 
-<h3>TimeEntriesTablePage</h3>
 
-@if (entries == null)
+<h1>TimeEntriesTablePage</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<button @onclick="LoadData">Load Time Entries</button>
+<button class="btn btn-primary" @onclick="LogTest">Log-test</button>
+
+@if (timeEntries != null)
 {
-    <p>Loading ...</p>
+    <ul>
+        @foreach (var entry in timeEntries)
+        {
+            <li>@entry.Description (@entry.Start.ToShortDateString())</li>
+        }
+    </ul>
 }
-else
+
+@if (timeEntries != null)
 {
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Description</th>
-                <th>Hours</th>
+
             </tr>
         </thead>
         <tbody>
-            @foreach (var e in entries)
+            @foreach (var e in timeEntries)
             {
                 <tr>
                     <td>@e.Id</td>
                     <td>@e.Description</td>
-                    <td>@e.Hours</td>
                 </tr>
             }
         </tbody>
     </table>
+    <ul>
+        @foreach (var entry in timeEntries)
+        {
+            <li>@entry.Description (@entry.Start.ToShortDateString())</li>
+        }
+    </ul>
+}
+else
+{
+    <p>nothing to show yet...</p>
 }
 
+<p>@testString</p>
+
+
 @code {
-    private List<TimeEntryDto>? entries;
+    private List<TimeEntryDto> timeEntries =new();
+    private string testString = "testString";
+
     protected override async Task OnInitializedAsync()
     {
-        entries = (await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now, DateTime.Now + TimeSpan.FromHours(1))).ToList();
+        Console.WriteLine("on initialize");
+    }
 
+    async Task LoadData()
+    {
+        Console.WriteLine($"Fetching entries");
+        timeEntries = (await TimeEntryFetcher.FetchTimeEntriesAsync(DateTime.Now.AddDays(-7), DateTime.Now)).ToList();
+        Console.WriteLine($"Fetched {timeEntries.Count()} entries");
+    }
+
+    protected void LogTest()
+    {
+        Console.WriteLine("LOGTEST");
+
+        testString += " test";
+    }
+
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
     }
 }
